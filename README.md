@@ -1,6 +1,6 @@
 node-sdl-speaker
 ======
-### Output PCM stream data to speaker with SDL2.
+#### Output PCM stream data to speaker with SDL2.(Only Support Mac)
 
 使用SDL2播放PCM数据。主要是用于播放PCM数据流。使用[TPCircularBuffer](https://github.com/michaeltyson/TPCircularBuffer)缓存音频数据
 

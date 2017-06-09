@@ -18,7 +18,6 @@ class Speaker {
   }
 
   start() {
-    console.log('call start');
     let res = this.addon.start();
     if (res === -1) {
       throw new Error('Current State is not Stop');
@@ -28,7 +27,7 @@ class Speaker {
   }
 
   close() {
-    this.addon.close();
+    this.addon.stop();
   }
 
   resume() {

@@ -1,5 +1,5 @@
 {
-  "name": "node-sdl-speaker",
+  "name": "sdl-speaker",
   "version": "0.1.0",
   "description": "Output PCM stream data to speaker with SDL2.",
   "keywords": [

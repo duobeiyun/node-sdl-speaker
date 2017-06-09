@@ -24,7 +24,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "0neSe7en <siyuan.se7en@gmail.com>",
+  "author": "0nese7en <siyuan.se7en@gmail.com>",
   "license": "MIT",
   "dependencies": {
     "nan": "^2.6.2"

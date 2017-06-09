@@ -1,0 +1,33 @@
+{
+  "name": "node-sdl-speaker",
+  "version": "0.1.0",
+  "description": "Output PCM stream data to speaker with SDL2.",
+  "keywords": [
+    "pcm",
+    "audio",
+    "sdl",
+    "sdl2",
+    "music",
+    "stream",
+    "coreaudio",
+    "electron"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:0neSe7en/node-sdl-speaker.git"
+  },
+  "bugs": {
+    "url": "https://github.com/0neSe7en/node-sdl-speaker/issues"
+  },
+  "homepage": "https://github.com/0neSe7en/node-sdl-speaker",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "0neSe7en <siyuan.se7en@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "nan": "^2.6.2"
+  },
+  "gypfile": true
+}

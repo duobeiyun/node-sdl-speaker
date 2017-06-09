@@ -14,7 +14,7 @@
         "<!(node -e \"require('nan')\")"
       ],
       "libraries": [
-        "/usr/local/lib/libSDL2.dylib"
+        "-Wl -rpath ./deps/libSDL2.dylib"
       ]
     }
   ]

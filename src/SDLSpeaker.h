@@ -5,7 +5,7 @@
 #ifndef NODE_SDL_SPEAKER_SDLSPEAKER_H
 #define NODE_SDL_SPEAKER_SDLSPEAKER_H
 #include <nan.h>
-#include "SDL2/SDL.h"
+#include <SDL2/SDL.h>
 #include "TPCircularBuffer/TPCircularBuffer.h"
 using v8::Isolate;
 using namespace Nan;

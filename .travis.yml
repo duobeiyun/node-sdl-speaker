@@ -6,6 +6,9 @@ node_js:
   - "6"
   - "7"
 
+before_install:
+  - brew install sdl2
+
 install:
   - PATH="`npm bin`:`npm bin -g`:$PATH"
   # Install dependencies and build

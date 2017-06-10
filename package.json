@@ -1,6 +1,6 @@
 {
   "name": "sdl-speaker",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Output PCM stream data to speaker with SDL2.",
   "keywords": [
     "pcm",
@@ -22,12 +22,16 @@
   "homepage": "https://github.com/0neSe7en/node-sdl-speaker",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node_modules/.bin/nyc node_modules/.bin/ava"
   },
   "author": "0nese7en <siyuan.se7en@gmail.com>",
   "license": "MIT",
   "dependencies": {
     "nan": "^2.6.2"
   },
-  "gypfile": true
+  "gypfile": true,
+  "devDependencies": {
+    "ava": "^0.19.1",
+    "nyc": "^11.0.2"
+  }
 }

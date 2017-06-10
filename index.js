@@ -10,10 +10,9 @@ class Speaker {
       this.sampleRate,
       this.channels,
       this.samplesPerFrame,
-      (err) => {
-        console.error(err)
-      }
+      (err) => { console.error(err) }
     );
+    this.currentState = 'close';
     this.addon.init();
   }
 
@@ -24,10 +23,12 @@ class Speaker {
     } else if (res === -2) {
       throw new Error('SDL OpenAudio Failed');
     }
+    this.currentState = 'start';
   }
 
   close() {
     this.addon.stop();
+    this.currentState = 'stop';
   }
 
   resume() {
@@ -35,12 +36,16 @@ class Speaker {
     if (res === -1) {
       throw new Error('Current State is not Pause');
     }
+    this.currentState = 'playing';
   }
 
   pause() {
     let res = this.addon.pause();
     if (res === -1) {
-      throw new Error('Current State is not Pause');
+      throw new Error('Current State is not Playing');
+    }
+    if (this.currentState !== 'stop') {
+      this.currentState = 'pause';
     }
   }
 

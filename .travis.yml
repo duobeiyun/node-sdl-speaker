@@ -1,0 +1,18 @@
+sudo: false
+language: node_js
+os: osx
+
+node_js:
+  - "6"
+  - "7"
+
+install:
+  - PATH="`npm bin`:`npm bin -g`:$PATH"
+  # Install dependencies and build
+  - npm install
+
+script:
+  # Output useful info for debugging
+  - node --version
+  - npm --version
+  - npm test

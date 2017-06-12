@@ -10,6 +10,7 @@
       ],
       "cflags": [ "-Wall", "-std=c++11" ],
       "include_dirs": [
+        "/usr/local/include",
         "src/include",
         "<!(node -e \"require('nan')\")"
       ],

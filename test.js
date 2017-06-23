@@ -44,15 +44,15 @@ test('wrtie larger than buffer queue', t => {
   t.pass();
 })
 
-test('clean', t => {
-  speaker.clean();
-  speaker.clean();
-  t.pass();
-})
-
 test(t => {
   speaker.start();
   speaker.start();
+  t.pass();
+})
+
+test('clean', t => {
+  speaker.clean();
+  speaker.clean();
   t.pass();
 })
 

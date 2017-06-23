@@ -59,6 +59,7 @@ void SDLSpeakerWrapper::InitSpeaker(const FunctionCallbackInfo<v8::Value>& info)
 }
 
 void SDLSpeakerWrapper::Write(const FunctionCallbackInfo<v8::Value>& info) {
+    cout << "write ..." << endl;
     void* buffer = node::Buffer::Data(info[0]->ToObject());
     int length = static_cast<int>(node::Buffer::Length(info[0]->ToObject()));
     SDLSpeakerWrapper *wrapper = ObjectWrap::Unwrap<SDLSpeakerWrapper>(info.Holder());

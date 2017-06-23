@@ -22,7 +22,7 @@
 #ifndef _SDL_config_windows_h
 #define _SDL_config_windows_h
 
-#include "SDL_platform.h"
+#include "SDL2/SDL_platform.h"
 
 /* This is a set of defines to configure the SDL features */
 

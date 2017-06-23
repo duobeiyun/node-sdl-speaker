@@ -30,7 +30,7 @@
  */
 
 /* General platform specific identifiers */
-#include "SDL_platform.h"
+#include "SDL2/SDL_platform.h"
 
 /* Make sure that this isn't included by Visual C++ */
 #ifdef _MSC_VER

@@ -4,18 +4,31 @@
       "target_name": "sdl-speaker",
       "sources": [
         "src/binding.cpp",
-        "src/TPCircularBuffer/TPCircularBuffer.c",
         "src/SDLSpeaker.cpp",
         "src/SDLSpeakerWrapper.cpp"
       ],
       "cflags": [ "-Wall", "-std=c++11" ],
       "include_dirs": [
-        "/usr/local/include",
-        "src/include",
+        "include",
         "<!(node -e \"require('nan')\")"
       ],
-      "libraries": [
-        "/usr/local/lib/libSDL2.dylib"
+      "conditions": [
+        ["OS=='mac'", {
+          "libraries": [
+            "/usr/local/lib/libSDL2.dylib"
+          ],
+          "sources": [
+            "src/TPCircularBuffer/TPCircularBuffer.c",
+          ]
+        },
+        "OS=='win'", {
+          "libraries": [
+            "C:/dev/vendors/SDL2-2.0.5/lib/x86/SDL2.lib"
+          ],
+          "sources": [
+            "src/hlring/rbuf.c"
+          ]
+        }]
       ]
     }
   ]

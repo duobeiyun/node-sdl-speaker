@@ -6,16 +6,22 @@
 #include <iostream>
 
 static void fill_audio(void *udata, Uint8 *stream, int len) {
-    TPCircularBuffer *buf = static_cast<TPCircularBuffer*>(udata);
+	rbuf_t *buf = static_cast<rbuf_t *>(udata);
+    //TPCircularBuffer *buf = static_cast<TPCircularBuffer*>(udata);
     SDL_memset(stream, 0, static_cast<size_t>(len));
     int32_t size = 0;
-    void *pcmFrame = TPCircularBufferTail(buf, &size);
+	if (rbuf_used(buf) >= len) {
+		rbuf_read(buf, stream, len);
+	} else {
+		memset(stream, 0, static_cast<size_t>(len));
+	}
+    /*void *pcmFrame = TPCircularBufferTail(buf, &size);
     if (size >= len) {
         memcpy(stream, pcmFrame, static_cast<size_t >(len));
         TPCircularBufferConsume(buf, len);
     } else {
         memset(stream, 0, static_cast<size_t>(len));
-    }
+    }*/
 }
 
 static SDL_AudioCallback audio_callback_ptr = fill_audio;
@@ -26,13 +32,15 @@ SDLSpeaker::SDLSpeaker(int freq, int channels, int samples, Callback *onError, i
     option.samples = samples;
     option.format = format;
     onErrorCallback = onError;
-    TPCircularBufferInit(&pcmBuffer, option.samples * 32);
+	pcmBuffer = rbuf_create(option.samples * 32);
+    //TPCircularBufferInit(&pcmBuffer, option.samples * 32);
 }
 
 SDLSpeaker::~SDLSpeaker() {
     SDL_CloseAudio();
     Clean();
     state = stop;
+	rbuf_destroy(pcmBuffer);
 }
 
 const char* SDLSpeaker::Init() {
@@ -51,7 +59,8 @@ const char* SDLSpeaker::Init() {
 }
 
 void SDLSpeaker::Clean() {
-    TPCircularBufferClear(&pcmBuffer);
+	rbuf_clear(pcmBuffer);
+    //TPCircularBufferClear(&pcmBuffer);
 }
 
 int SDLSpeaker::Start() {
@@ -66,7 +75,8 @@ int SDLSpeaker::Start() {
 }
 
 void SDLSpeaker::Write(void * buf, int32_t length) {
-    TPCircularBufferProduceBytes(&pcmBuffer, buf, length);
+	rbuf_write(pcmBuffer, static_cast<unsigned char*>(buf), length);
+    //TPCircularBufferProduceBytes(&pcmBuffer, buf, length);
 }
 
 int SDLSpeaker::Stop() {

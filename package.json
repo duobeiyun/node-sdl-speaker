@@ -32,7 +32,6 @@
   "gypfile": true,
   "devDependencies": {
     "ava": "^0.19.1",
-    "ffmpeg-node-capture": "git+http://team.duobeiyun.com/source/ffmpeg-node-capture.git",
     "nyc": "^11.0.2"
   }
 }

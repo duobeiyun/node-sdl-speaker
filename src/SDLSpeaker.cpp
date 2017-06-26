@@ -7,26 +7,10 @@
 
 static void fill_audio(void *udata, Uint8 *stream, int len) {
 	rbuf_t *buf = static_cast<rbuf_t *>(udata);
-	std::cout << "speaker read:" << len
-	          << "current used:" << rbuf_used(buf)
-	          << "avaliable:" << rbuf_available(buf)
-	          << std::endl;
-    //TPCircularBuffer *buf = static_cast<TPCircularBuffer*>(udata);
     SDL_memset(stream, 0, static_cast<size_t>(len));
-    int32_t size = 0;
 	if (rbuf_used(buf) >= len) {
-	    std::cout << "read..." << len << std::endl;
 		rbuf_read(buf, stream, len);
-	} else {
-		memset(stream, 0, static_cast<size_t>(len));
 	}
-    /*void *pcmFrame = TPCircularBufferTail(buf, &size);
-    if (size >= len) {
-        memcpy(stream, pcmFrame, static_cast<size_t >(len));
-        TPCircularBufferConsume(buf, len);
-    } else {
-        memset(stream, 0, static_cast<size_t>(len));
-    }*/
 }
 
 static SDL_AudioCallback audio_callback_ptr = fill_audio;
@@ -38,7 +22,6 @@ SDLSpeaker::SDLSpeaker(int freq, int channels, int samples, Callback *onError, i
     option.format = format;
     onErrorCallback = onError;
 	pcmBuffer = rbuf_create(option.samples * 32);
-    //TPCircularBufferInit(&pcmBuffer, option.samples * 32);
 }
 
 SDLSpeaker::~SDLSpeaker() {
@@ -65,7 +48,6 @@ const char* SDLSpeaker::Init() {
 
 void SDLSpeaker::Clean() {
 	rbuf_clear(pcmBuffer);
-    //TPCircularBufferClear(&pcmBuffer);
 }
 
 int SDLSpeaker::Start() {
@@ -75,16 +57,13 @@ int SDLSpeaker::Start() {
         return -2;
     }
     SDL_PauseAudio(0);
-	std::cout << "start..." << rbuf_used(pcmBuffer) << std::endl;
     state = playing;
     return 0;
 }
 
-void SDLSpeaker::Write(void * buf, int32_t length) {
+int SDLSpeaker::Write(void * buf, int32_t length) {
 	rbuf_write(pcmBuffer, static_cast<unsigned char*>(buf), length);
-	int used_count = rbuf_used(pcmBuffer);
-	std::cout << "speaker write:" << length  << "current used:" << used_count << std::endl;
-    //TPCircularBufferProduceBytes(&pcmBuffer, buf, length);
+	return rbuf_available(pcmBuffer);
 }
 
 int SDLSpeaker::Stop() {

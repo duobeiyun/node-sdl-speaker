@@ -5,8 +5,9 @@
 #ifndef NODE_SDL_SPEAKER_SDLSPEAKER_H
 #define NODE_SDL_SPEAKER_SDLSPEAKER_H
 #include <nan.h>
-#include "SDL2/SDL.h"
+#include <SDL2/SDL.h>
 #include "hlring/rbuf.h"
+
 using v8::Isolate;
 using namespace Nan;
 
@@ -34,7 +35,7 @@ public:
     int Stop();
     int Pause();
     int Resume();
-    void Write(void * buf, int32_t length);
+    int Write(void * buf, int32_t length);
     CurrentPlayState state = stop;
     Callback *onErrorCallback;
 

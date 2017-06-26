@@ -1,6 +1,10 @@
 sudo: false
 language: node_js
 os: osx
+osx_image: xcode8
+
+env:
+  - CXX=g++-4.8
 
 node_js:
   - "6"
@@ -16,6 +20,7 @@ install:
 
 script:
   # Output useful info for debugging
+  - $CXX --version
   - node --version
   - npm --version
   - npm test

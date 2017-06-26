@@ -8,7 +8,6 @@
 #include <string>
 #include <iostream>
 #include <nan.h>
-#include "SDL2/SDL.h"
 
 #include "SDLSpeaker.h"
 

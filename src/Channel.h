@@ -16,7 +16,7 @@ class Channel {
 public:
     Channel(string ch_name) {
         name = ch_name;
-        buffer = rbuf_create(320 * 6400);
+        buffer = rbuf_create(320 * 100);
     };
     ~Channel() {
         clean();

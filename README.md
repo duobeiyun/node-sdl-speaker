@@ -1,6 +1,8 @@
 node-sdl-speaker 
 ======
-> Output PCM stream data to speaker with SDL2. Especially for realtime audio stream. [![npm](https://img.shields.io/npm/v/npm.svg)](https://www.npmjs.com/package/sdl-speaker)
+> Output PCM stream data to speaker with SDL2. Especially for realtime audio stream. 
+
+[![NPM](https://nodei.co/npm/sdl-speaker.png)](https://www.npmjs.com/package/sdl-speaker)
 
 ## Installing / Getting started
 

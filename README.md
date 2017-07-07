@@ -1,67 +1,92 @@
-node-sdl-speaker
+node-sdl-speaker 
 ======
-#### Output PCM stream data to speaker with SDL2.(Only Support Mac)
+> Output PCM stream data to speaker with SDL2. Especially for realtime audio stream. [![npm](https://img.shields.io/npm/v/npm.svg)](https://www.npmjs.com/package/sdl-speaker)
 
-使用SDL2播放PCM数据。主要是用于播放PCM数据流。使用[TPCircularBuffer](https://github.com/michaeltyson/TPCircularBuffer)缓存音频数据
+## Installing / Getting started
 
-Installation
----
+You need SDL2 in your system. 
 
-```bash
+- Mac: `brew install sdl2`. 
+- Windows: Download SDL2 from [www.libsdl.org](https://www.libsdl.org/download-2.0.php).
+
+```shell
 $ npm install sdl-speaker
 ```
 
-Example
----
+## Example
 
 ```javascript
 const Speaker = require('sdl-speaker');
-const speaker = new Speaker({
-  sampleRate: 16000,
+const defaultFormat = {
   channels: 1,
-  samplesPerFrame: 320
-});
+  sampleRate: 16000,
+  samplesPerFrame: 320,
+};
+
+// Init SDL Speaker.
+Speaker.init(defaultFormat);
+
+// Register a channel for write buf.
+let test = Speaker.register('test');
 
 // write some buffer;
-speaker.write(buffer);
+test.write(buf);
 
-// start play audio;
-speaker.open();
-
+// When you are ready..
+// Start play audio
+Speaker.start();
 ```
 
-API
----
+## Api Reference
 
-### new Speaker([ option ]) -> instance;
+#### Speaker.init([ option ])
 
-创建一个`Speaker`实例。`option`是可选对象，包含如下配置
+Init SDL. `option` is optional.
 
-- `channels`: 声道数. 默认值: `1`.
-- `samplesRate`: 每个声道的采样率. 默认值: `16000`.
-- `samplesPerFrame`: 每一帧的采样数. 默认值: `320`.
+- `channels`: Channel count. default: `1`.
+- `samplesRate`: Sample rate for every channel. default: `16000`.
+- `samplesPerFrame`: Samples per frame. default: `320`.
 
-### speaker.write(pcmBuffer)
+### Speaker.start()
 
-把音频数据写入到缓冲区中。可以在`speaker.open()`之前执行，提前缓存数据。
+Start play audio. Read audio data from a ring buffer. If data in ring buffer less than `samplesPerFrame`, fill 0.
 
-### speaker.open()
+### Speaker.stop()
 
-开始播放音频。从缓冲区中读取数据。如果缓冲区的数据小于`samplesPerFrame`则填充静音。
+Close and Destroy SDL player.
 
-### speaker.close()
+### Speaker.pause()
 
-关闭播放器。并清空缓冲区。
+Pause SDL player.
 
-### speaker.pause()
+### Speaker.resume()
 
-暂停播放器。不清空缓冲区。
+Resume SDL player.
 
-### speaker.resume()
+### Speaker.detach(name)
 
-重启播放器。
+Detach audio source from SDL.
 
-### speaker.clean()
+### Speaker.cleanAll()
 
-主动清空缓冲区。
+Clean all audio sources's buffer.
 
+#### Speaker.register(name) -> audioSource
+
+Register a audio source for write buffer. The `name` must unique.
+
+#### audioSource.write(buffer)
+
+Write audio buffer to ring buffer. You can write before speaker start.
+
+#### audioSource.clean()
+
+Clean this audio source's buffer.
+
+## TODO
+
+- [] More Test.
+- [] Fix Travis-CI build failed.
+- [] Pipe stream to `audioSource`.
+- [] Customise `rbuf` capability.
+- [] Self contained `SDL2`.

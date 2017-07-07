@@ -6,6 +6,7 @@
         "src/binding.cpp",
         "src/SDLSpeaker.cpp",
         "src/SDLSpeakerWrapper.cpp",
+        "src/Channel.cpp",
         "src/hlring/rbuf.c"
       ],
       "cflags": [ "-Wall", "-std=c++11" ],

@@ -8,6 +8,7 @@
 #include <string>
 #include <iostream>
 #include <nan.h>
+#include <SDL2/SDL.h>
 
 #include "SDLSpeaker.h"
 
@@ -27,6 +28,10 @@ public:
     static NAN_METHOD(Resume);
     static NAN_METHOD(Pause);
     static NAN_METHOD(Clean);
+    static NAN_METHOD(CleanAll);
+    static NAN_METHOD(NewChannel);
+    static NAN_METHOD(RemoveChannel);
+    static NAN_METHOD(Mix);
 
 private:
     explicit SDLSpeakerWrapper(SDLSpeaker *speaker) : speaker(speaker) {};

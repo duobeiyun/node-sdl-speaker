@@ -19,6 +19,9 @@ void SDLSpeakerWrapper::Init(v8::Local<v8::Object> exports) {
     SetPrototypeMethod(tpl, "pause", Pause);
     SetPrototypeMethod(tpl, "resume", Resume);
     SetPrototypeMethod(tpl, "clean", Clean);
+    SetPrototypeMethod(tpl, "cleanAll", CleanAll);
+    SetPrototypeMethod(tpl, "newChannel", NewChannel);
+    SetPrototypeMethod(tpl, "removeChannel", RemoveChannel);
 
     constructor().Reset(GetFunction(tpl).ToLocalChecked());
     exports->Set(
@@ -59,11 +62,45 @@ void SDLSpeakerWrapper::InitSpeaker(const FunctionCallbackInfo<v8::Value>& info)
 }
 
 void SDLSpeakerWrapper::Write(const FunctionCallbackInfo<v8::Value>& info) {
-    void* buffer = node::Buffer::Data(info[0]->ToObject());
-    int length = static_cast<int>(node::Buffer::Length(info[0]->ToObject()));
+    void* buffer = node::Buffer::Data(info[1]->ToObject());
+    int length = static_cast<int>(node::Buffer::Length(info[1]->ToObject()));
+    v8::String::Utf8Value m(info[0]->ToString());
+    string ch_name = *m;
     SDLSpeakerWrapper *wrapper = ObjectWrap::Unwrap<SDLSpeakerWrapper>(info.Holder());
-    int remain = wrapper->speaker->Write(buffer, length);
+    int remain = wrapper->speaker->Write(buffer, length, ch_name);
     info.GetReturnValue().Set(Nan::New(remain));
+}
+
+
+void SDLSpeakerWrapper::Clean(const FunctionCallbackInfo<v8::Value> &info) {
+    SDLSpeakerWrapper *wrapper = ObjectWrap::Unwrap<SDLSpeakerWrapper>(info.Holder());
+    v8::String::Utf8Value m(info[0]->ToString());
+    string ch_name = *m;
+    wrapper->speaker->Clean(ch_name);
+}
+
+
+void SDLSpeakerWrapper::CleanAll(const FunctionCallbackInfo<v8::Value> &info) {
+    SDLSpeakerWrapper *wrapper = ObjectWrap::Unwrap<SDLSpeakerWrapper>(info.Holder());
+    wrapper->speaker->CleanAll();
+}
+
+
+void SDLSpeakerWrapper::NewChannel(const FunctionCallbackInfo<v8::Value> &info) {
+    SDLSpeakerWrapper *wrapper = ObjectWrap::Unwrap<SDLSpeakerWrapper>(info.Holder());
+    v8::String::Utf8Value m(info[0]->ToString());
+    string ch_name = *m;
+    int res = wrapper->speaker->NewChannel(ch_name);
+    info.GetReturnValue().Set(Nan::New(res));
+}
+
+
+void SDLSpeakerWrapper::RemoveChannel(const FunctionCallbackInfo<v8::Value> &info) {
+    SDLSpeakerWrapper *wrapper = ObjectWrap::Unwrap<SDLSpeakerWrapper>(info.Holder());
+    v8::String::Utf8Value m(info[0]->ToString());
+    string ch_name = *m;
+    int res = wrapper->speaker->RemoveChannel(ch_name);
+    info.GetReturnValue().Set(Nan::New(res));
 }
 
 
@@ -101,7 +138,18 @@ void SDLSpeakerWrapper::Resume(const FunctionCallbackInfo<v8::Value> &info) {
     }
 }
 
-void SDLSpeakerWrapper::Clean(const FunctionCallbackInfo<v8::Value> &info) {
-    SDLSpeakerWrapper *wrapper = ObjectWrap::Unwrap<SDLSpeakerWrapper>(info.Holder());
-    wrapper->speaker->Clean();
+
+void SDLSpeakerWrapper::Mix(const FunctionCallbackInfo<v8::Value> &info) {
+    void* targetBuffer = node::Buffer::Data(info[0]->ToObject());
+    void* srcBuffer = node::Buffer::Data(info[1]->ToObject());
+    int channels = To<int>(info[2]).FromJust();
+    Uint32 length = static_cast<Uint32 >(node::Buffer::Length(info[0]->ToObject()));
+    SDL_MixAudioFormat(
+            static_cast<Uint8*>(targetBuffer),
+            static_cast<const Uint8*>(srcBuffer),
+            AUDIO_S16LSB,
+            length,
+            SDL_MIX_MAXVOLUME / channels
+    );
+    info.GetReturnValue().Set(info[0]);
 }

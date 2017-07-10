@@ -27,7 +27,7 @@ static void fill_audio(void *udata, Uint8 *stream, int len) {
             channel_count++;
         }
     }
-    unsigned char src[len];
+    auto *src = new unsigned char(len);
     SDL_memset(stream, 0, static_cast<size_t>(len));
     for (auto it = channels_map_ptr->begin(); it != channels_map_ptr->end(); ++it) {
         if (need_mix(it->second->buffer, len)) {
@@ -41,6 +41,7 @@ static void fill_audio(void *udata, Uint8 *stream, int len) {
             );
         }
     }
+    delete[] src;
 }
 
 static SDL_AudioCallback audio_callback_ptr = fill_audio;

@@ -41,7 +41,7 @@ Speaker.start();
 
 ## Api Reference
 
-#### Speaker.init([ option ])
+## Speaker.init([ option ])
 
 Init SDL. `option` is optional.
 

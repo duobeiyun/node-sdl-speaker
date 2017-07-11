@@ -1,6 +1,6 @@
 {
   "name": "sdl-speaker",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "Output PCM stream data to speaker with SDL2.",
   "keywords": [
     "pcm",

@@ -10,21 +10,27 @@
     "music",
     "stream",
     "coreaudio",
-    "electron"
+    "electron",
+    "realtime",
+    "mac",
+    "windows"
   ],
   "repository": {
     "type": "git",
-    "url": "git@github.com:0neSe7en/node-sdl-speaker.git"
+    "url": "git@github.com:duobeiyun/node-sdl-speaker.git"
   },
   "bugs": {
-    "url": "https://github.com/0neSe7en/node-sdl-speaker/issues"
+    "url": "https://github.com/duobeiyun/node-sdl-speaker/issues"
   },
-  "homepage": "https://github.com/0neSe7en/node-sdl-speaker",
+  "homepage": "https://github.com/duobeiyun/node-sdl-speaker",
   "main": "index.js",
   "scripts": {
     "test": "node_modules/.bin/nyc node_modules/.bin/ava --serial"
   },
   "author": "0nese7en <siyuan.se7en@gmail.com>",
+  "contributors": [
+      "sharpbai <sharpbai@gmail.com>"
+  ],
   "license": "MIT",
   "dependencies": {
     "nan": "^2.6.2"

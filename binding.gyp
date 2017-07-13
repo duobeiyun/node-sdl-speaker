@@ -25,10 +25,10 @@
         },
         "OS=='win'", {
           "libraries": [
-            "C:/dev/vendors/SDL2-2.0.5/lib/x86/SDL2.lib"
+            "<(module_root_dir)/lib/SDL2-2.0.5/win32/x86/SDL2.lib"
           ],
           "include_dirs": [
-            "platform-include/win32"
+            "<(module_root_dir)/platform-include/win32"
           ]
         }]
       ]

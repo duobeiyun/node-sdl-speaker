@@ -17,7 +17,8 @@
       "conditions": [
         ["OS=='mac'", {
           "libraries": [
-            "/usr/local/lib/libSDL2.dylib"
+            "-framework", "Cocoa",
+            "<(module_root_dir)/lib/SDL2-2.0.5/osx/libSDL2.a"
           ],
           "include_dirs": [
             "platform-include/darwin"

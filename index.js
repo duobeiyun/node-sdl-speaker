@@ -21,7 +21,7 @@ API.init = (opts, onError) => {
   opts = opts || {};
   let sampleRate = opts.sampleRate || 16000;
   let channels = opts.channels || 1;
-  let samplesPerFrame = opts.samplesPerFrame || 320;
+  let samplesPerFrame = opts.samplesPerFrame || 1024;
   let onErrorCb = onError || (() => {});
   wrapper.init(sampleRate, channels, samplesPerFrame, onErrorCb);
   currentState = 'inited';

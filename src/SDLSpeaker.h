@@ -23,7 +23,6 @@ struct SpeakerOpt {
     int format;
 };
 
-enum CurrentPlayState { stop, pause, playing };
 
 class SDLSpeaker {
 public:
@@ -34,6 +33,7 @@ public:
             Callback *onError = nullptr,
             int format = AUDIO_S16LSB
     );
+    enum CurrentPlayState { stop, pause, playing };
     int Start();
     const char* Init();
     int Stop();

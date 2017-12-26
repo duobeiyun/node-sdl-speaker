@@ -10,5 +10,9 @@ Speaker.init(defaultFormat);
 let testChannel = Speaker.register('test');
 
 const fs = require('fs');
-let buf = fs.readFileSync('test.pcm');
+let buf = fs.readFileSync('output.pcm');
 testChannel.write(buf);
+Speaker.start()
+setTimeout(() => {
+  Speaker.stop();
+}, 4000)

@@ -126,7 +126,7 @@ void SDLSpeaker::Clean(string channel_name) {
 }
 
 void SDLSpeaker::CleanAll() {
-    for (auto ch = channels_map.begin(); ch != channels_map.end();) {
+    for (auto ch = channels_map.begin(); ch != channels_map.end(); ++ch) {
         ch->second->clean();
     }
 }

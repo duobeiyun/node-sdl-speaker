@@ -4,6 +4,111 @@
 
 #include "SDLSpeaker.h"
 #include <iostream>
+#include "nanomsg\nn.h"
+#include "nanomsg\pubsub.h"
+#include <functional>
+#include <thread>
+
+/**
+ * nanomsg 操作类
+ */
+class nanomsg_t{
+private:
+    int nnfd = -1;
+    int nnerrno = 0;
+    bool runing = true;
+    std::thread readThread;
+    bool isServer = false;
+public:
+    nanomsg_t(){};
+    ~nanomsg_t(){};
+    std::string url;
+    int timeout = 300;
+    std::function<int(void *,int)> recvCallBack = nullptr;
+
+    void readThreadFun(){
+        struct nn_pollfd pfd[1];
+        pfd[0].fd = nnfd;
+        pfd[0].events = NN_POLLIN;
+        while (runing) {
+            int rc = nn_poll(pfd, 1, timeout);
+            if (rc == 0) {
+                continue;
+            }
+            if (rc == -1) {
+                break;
+            }
+            if (pfd[0].revents & NN_POLLIN) {
+                uint8_t *msg;
+                rc = nn_recv(pfd[0].fd, &msg, NN_MSG, 0);
+                if (rc < 0) {
+                    break;
+                }
+                if (recvCallBack) {
+                    recvCallBack(msg, rc);
+                    freeReadBuf(msg);
+                } else {
+                    nn_freemsg(msg);
+                }
+
+            }
+        }
+    }
+    bool initAsPub(){
+        /*  Create the socket. */
+        isServer = true;
+        nnfd = nn_socket (AF_SP, NN_PUB);
+        if (nnfd < 0) {
+            nnerrno = nn_errno ();
+            return false;
+        }
+        if (nn_bind (nnfd, url.c_str()) < 0) {
+            nnerrno = nn_errno ();
+            nn_close (nnfd);
+            return false;
+        }
+        return true;
+    }
+    bool initAsSub(){
+        nnfd = nn_socket (AF_SP, NN_SUB);
+        if (nnfd < 0) {
+            nnerrno = nn_errno ();
+            return false;
+        }
+
+        if (nn_connect (nnfd, url.c_str()) < 0) {
+            nnerrno = nn_errno ();
+            nn_close (nnfd);
+            return false;
+        }
+        /*  We want all messages, so just subscribe to the empty value. */
+        if (nn_setsockopt (nnfd, NN_SUB, NN_SUB_SUBSCRIBE, "", 0) < 0) {
+            nnerrno = nn_errno ();
+            nn_close (nnfd);
+            return false;
+        }
+        readThread = std::thread(std::bind(&nanomsg_t::readThreadFun,this));
+        return true;
+    }
+    void freeReadBuf(void * msg){
+        nn_freemsg(msg);
+    }
+    void close(){
+        runing = false;
+        if(readThread.joinable()){
+            readThread.join();
+        }
+    }
+    int send(const char *buf,int len){
+        int rc = nn_send (nnfd, buf, len, NN_DONTWAIT);
+        if (rc < 0) {
+            nnerrno = nn_errno ();
+            return rc;
+        }
+        return rc;
+    }
+};
+
 
 bool need_mix(rbuf_t *buf, int len) {
     return rbuf_used(buf) >= len;
@@ -101,6 +206,12 @@ int SDLSpeaker::NewChannel(string channel_name) {
     if (got == channels_map.end()) {
         Channel* channel = new Channel(channel_name);
         channels_map[channel_name] = channel;
+        
+        nanomsg_t *pnanomsg = new nanomsg_t();
+        pnanomsg->url = "ipc://audio-" + channel_name;
+        pnanomsg->recvCallBack = std::bind(&Channel::write,channel,std::placeholders::_1,std::placeholders::_2);
+        pnanomsg->initAsSub();
+        nanomsg_t_map[channel_name] = pnanomsg;
         return 0;
     } else {
         return -1;
@@ -112,6 +223,12 @@ int SDLSpeaker::RemoveChannel(string channel_name) {
     if (got == channels_map.end()) {
         return -1;
     } else {
+    	auto nt = nanomsg_t_map.find(channel_name);
+    	if(nt != nanomsg_t_map.end()){
+    		((nanomsg_t*)(nt->second))->close();
+    		delete nt->second;
+    		nanomsg_t_map.erase(channel_name);
+    	}
         delete got->second;
         channels_map.erase(channel_name);
         return 0;

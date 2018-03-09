@@ -9,7 +9,7 @@
 #include <iostream>
 #include <nan.h>
 #include <SDL2/SDL.h>
-
+#include <map>
 #include "SDLSpeaker.h"
 
 using v8::Isolate;
@@ -41,7 +41,6 @@ private:
         static Persistent<v8::Function> _constructor;
         return _constructor;
     }
-
     SDLSpeaker *speaker;
 };
 

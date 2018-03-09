@@ -26,7 +26,8 @@
         },
         "OS=='win'", {
           "libraries": [
-            "<(module_root_dir)/lib/SDL2-2.0.5/win32/x86/SDL2.lib"
+            "<(module_root_dir)/lib/SDL2-2.0.5/win32/x86/SDL2.lib",
+            "<(module_root_dir)/lib/libnanomsg.dll.a"
           ],
           "include_dirs": [
             "<(module_root_dir)/platform-include/win32"

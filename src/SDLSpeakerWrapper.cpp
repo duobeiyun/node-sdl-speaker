@@ -4,6 +4,7 @@
 
 #include "SDLSpeakerWrapper.h"
 
+
 SDLSpeakerWrapper::~SDLSpeakerWrapper() {}
 
 void SDLSpeakerWrapper::Init(v8::Local<v8::Object> exports) {

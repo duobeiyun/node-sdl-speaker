@@ -23,7 +23,6 @@ struct SpeakerOpt {
     int format;
 };
 
-
 class SDLSpeaker {
 public:
     SDLSpeaker(
@@ -53,6 +52,7 @@ private:
     SpeakerOpt option;
     SDL_AudioSpec wanted_spec;
     std::unordered_map<std::string, Channel*> channels_map;
+    std::unordered_map<std::string, void*> nanomsg_t_map;
 };
 
 

@@ -4,12 +4,13 @@ node-sdl-speaker
 
 [![NPM](https://nodei.co/npm/sdl-speaker.png)](https://www.npmjs.com/package/sdl-speaker)
 
+## Features
+
+- Stream Support. You can pipe a pcm stream to audio channel.
+- Multi Channels Support. You can open multi channels, it will mix all channels via `SDL_MixAudioFormat`.
+- Low Latency.
+
 ## Installing / Getting started
-
-You need SDL2 in your system. 
-
-- Mac: `brew install sdl2`. 
-- Windows: Download SDL2 from [www.libsdl.org](https://www.libsdl.org/download-2.0.php).
 
 ```shell
 $ npm install sdl-speaker
@@ -19,20 +20,14 @@ $ npm install sdl-speaker
 
 ```javascript
 const Speaker = require('sdl-speaker');
-const defaultFormat = {
-  channels: 1,
-  sampleRate: 16000,
-  samplesPerFrame: 320,
-};
-
 // Init SDL Speaker.
-Speaker.init(defaultFormat);
+Speaker.init();
 
 // Register a channel for write buf.
-let test = Speaker.register('test');
+const testChannel = Speaker.register('test');
 
-// write some buffer;
-test.write(buf);
+// pipe a pcm data to stream;
+fs.createReadStream('test.pcm').pipe(testChannel);
 
 // When you are ready..
 // Start play audio
@@ -45,9 +40,9 @@ Speaker.start();
 
 Init SDL. `option` is optional.
 
-- `channels`: Channel count. default: `1`.
-- `samplesRate`: Sample rate for every channel. default: `16000`.
-- `samplesPerFrame`: Samples per frame. default: `320`.
+- `channels`: Channel count. default: `2`.
+- `samplesRate`: Sample rate for every channel. default: `44100`.
+- `samplesPerFrame`: Samples per frame. default: `1024`.
 
 ### Speaker.start()
 
@@ -73,15 +68,15 @@ Detach audio source from SDL.
 
 Clean all audio sources's buffer.
 
-#### Speaker.register(name) -> audioSource
+#### Speaker.register(name) -> audioChannel
 
 Register a audio source for write buffer. The `name` must unique.
 
-#### audioSource.write(buffer)
+#### audioChannel.write(buffer)
 
 Write audio buffer to ring buffer. You can write before speaker start.
 
-#### audioSource.clean()
+#### audioChannel.clean()
 
 Clean this audio source's buffer.
 
@@ -89,6 +84,6 @@ Clean this audio source's buffer.
 
 - [ ] More Test.
 - [ ] Fix Travis-CI build failed.
-- [ ] Pipe stream to `audioSource`.
+- [x] Pipe stream to `audioSource`.
 - [ ] Customise `rbuf` capability.
 - [x] Self contained `SDL2`.

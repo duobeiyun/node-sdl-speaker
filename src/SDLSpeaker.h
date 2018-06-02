@@ -7,13 +7,13 @@
 #include <unordered_map>
 #include <iostream>
 #include <string>
-#include <nan.h>
+#include <napi.h>
+#include <uv.h>
 #include <SDL2/SDL.h>
 #include "Channel.h"
 #include "hlring/rbuf.h"
 
-using v8::Isolate;
-using namespace Nan;
+using namespace Napi;
 using std::string;
 
 struct SpeakerOpt {
@@ -26,16 +26,16 @@ struct SpeakerOpt {
 
 class SDLSpeaker {
 public:
-    SDLSpeaker(
-            int freq = 16000,
-            int channels = 1,
-            int samples = 320,
-            Callback *onError = nullptr,
-            int format = AUDIO_S16LSB
-    );
+    SDLSpeaker() {
+        option.freq = 44100;
+        option.channels = 2;
+        option.samples = 1024;
+        option.format = AUDIO_S16LSB;
+    };
+    ~SDLSpeaker();
     enum CurrentPlayState { stop, pause, playing };
     int Start();
-    const char* Init();
+    const char* Init(int freq, uint32_t channels, uint32_t samples, uint32_t format);
     int Stop();
     int Pause();
     int Resume();
@@ -45,10 +45,8 @@ public:
     int RemoveChannel(string channel_name);
     void CleanAll();
     CurrentPlayState state = stop;
-    Callback *onErrorCallback;
 
 private:
-    ~SDLSpeaker();
     Channel* find_channel(string);
     SpeakerOpt option;
     SDL_AudioSpec wanted_spec;

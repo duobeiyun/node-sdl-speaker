@@ -1,18 +1,19 @@
-#include <nan.h>
+#include <napi.h>
+#include <uv.h>
 #include "SDLSpeakerWrapper.h"
-using v8::String;
-using v8::FunctionTemplate;
-using Nan::GetFunction;
-using Nan::New;
-using Nan::Set;
+using Napi::String;
+using Napi::FunctionReference;
+using Napi::GetFunction;
+using Napi::New;
+using Napi::Set;
 
-void InitAll(v8::Local<v8::Object> exports) {
+void InitAll(Napi::Object exports) {
     SDLSpeakerWrapper::Init(exports);
     Set(
         exports, 
-        New<String>("mix").ToLocalChecked(),
-        GetFunction(New<FunctionTemplate>(SDLSpeakerWrapper::Mix)).ToLocalChecked()
+        New<String>("mix"),
+        GetFunction(New<Napi::FunctionReference>(SDLSpeakerWrapper::Mix))
     );
 }
 
-NODE_MODULE(sdl_speaker, InitAll);
+NODE_API_MODULE(sdl_speaker, InitAll);

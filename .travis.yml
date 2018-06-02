@@ -7,15 +7,10 @@ env:
   - CXX=g++-4.8
 
 node_js:
-  - "6"
-  - "7"
-
-before_install:
-  - brew install sdl2
+  - "8"
 
 install:
   - PATH="`npm bin`:`npm bin -g`:$PATH"
-  # Install dependencies and build
   - npm install
 
 script:

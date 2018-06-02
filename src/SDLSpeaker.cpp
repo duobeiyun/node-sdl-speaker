@@ -3,23 +3,12 @@
 //
 
 #include "SDLSpeaker.h"
-#include <iostream>
 
 bool need_mix(rbuf_t *buf, int len) {
     return rbuf_used(buf) >= len;
 }
 
-bool is_silent(unsigned char* src, int len) {
-    for (int i = 0; i < len; i++) {
-        if (src[i] != 0) {
-            return false;
-        }
-    }
-    return true;
-}
-
 static void fill_audio(void *udata, Uint8 *stream, int len) {
-    // TODO: handle silent volume;
     auto *channels_map_ptr = static_cast<std::unordered_map<std::string, Channel*> *>(udata);
     int channel_count = 0;
     for (auto it = channels_map_ptr->begin(); it != channels_map_ptr->end(); ++it) {
@@ -46,30 +35,22 @@ static void fill_audio(void *udata, Uint8 *stream, int len) {
 
 static SDL_AudioCallback audio_callback_ptr = fill_audio;
 
-SDLSpeaker::SDLSpeaker(int freq, int channels, int samples, Callback *onError, int format) {
-    option.freq = freq;
-    option.channels = channels;
-    option.samples = samples;
-    option.format = format;
-    onErrorCallback = onError;
-}
-
 SDLSpeaker::~SDLSpeaker() {
     SDL_CloseAudio();
     CleanAll();
     state = stop;
 }
 
-const char* SDLSpeaker::Init() {
+const char* SDLSpeaker::Init(int freq, uint32_t channels, uint32_t samples, uint32_t format) {
     if (SDL_Init(SDL_INIT_AUDIO | SDL_INIT_TIMER)) {
         const char* err = SDL_GetError();
         return err;
     }
-    wanted_spec.freq = option.freq;
-    wanted_spec.format = static_cast<SDL_AudioFormat >(option.format);
-    wanted_spec.channels = static_cast<Uint8 >(option.channels);
+    wanted_spec.freq = freq;
+    wanted_spec.format = static_cast<SDL_AudioFormat >(format);
+    wanted_spec.channels = static_cast<Uint8 >(channels);
     wanted_spec.silence = 0;
-    wanted_spec.samples = static_cast<Uint16>(option.samples);
+    wanted_spec.samples = static_cast<Uint16>(samples);
     wanted_spec.userdata = &channels_map;
     wanted_spec.callback = audio_callback_ptr;
     return nullptr;

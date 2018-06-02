@@ -10,13 +10,12 @@
 #include <iostream>
 #include "hlring/rbuf.h"
 
-using std::string;
 
 class Channel {
 public:
-    Channel(string ch_name) {
+    explicit Channel(std::string ch_name) {
         name = ch_name;
-        buffer = rbuf_create(320 * 100);
+        buffer = rbuf_create(320 * 10000);
     };
     ~Channel() {
         clean();
@@ -24,7 +23,7 @@ public:
     };
     int write(void * buf, int32_t length);
     int clean();
-    string name;
+    std::string name;
     rbuf_t *buffer;
 };
 

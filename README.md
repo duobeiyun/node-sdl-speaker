@@ -2,6 +2,7 @@ node-sdl-speaker
 ======
 > Output PCM stream data to speaker with SDL2. Especially for realtime audio stream. 
 
+[![Build Status](https://travis-ci.org/0neSe7en/node-sdl-speaker.svg?branch=master)](https://travis-ci.org/0neSe7en/node-sdl-speaker)
 [![NPM](https://nodei.co/npm/sdl-speaker.png)](https://www.npmjs.com/package/sdl-speaker)
 
 ## Features

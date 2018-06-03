@@ -4,7 +4,7 @@ os: osx
 osx_image: xcode8
 
 env:
-  - CXX=g++-4.8
+  - CXX=g++
 
 node_js:
   - "8"
@@ -18,4 +18,3 @@ script:
   - $CXX --version
   - node --version
   - npm --version
-  - npm test

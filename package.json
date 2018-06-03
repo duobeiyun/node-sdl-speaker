@@ -24,9 +24,7 @@
   },
   "homepage": "https://github.com/duobeiyun/node-sdl-speaker",
   "main": "index.js",
-  "scripts": {
-    "test": "node_modules/.bin/nyc node_modules/.bin/ava --serial"
-  },
+  "scripts": {},
   "author": "0nese7en <siyuan.se7en@gmail.com>",
   "contributors": [
     "sharpbai <sharpbai@gmail.com>"
